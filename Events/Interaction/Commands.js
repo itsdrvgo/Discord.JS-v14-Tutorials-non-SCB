@@ -3,6 +3,8 @@ const { ApplicationCommand } = InteractionType
 const BlacklistGuildDB = require("../../Structures/Schemas/BlacklistG")
 const BlacklistUserDB = require("../../Structures/Schemas/BlacklistU")
 const Reply = require("../../Systems/Reply")
+const DBU = require("../../Structures/Schemas/PremiumUser")
+const DBG = require("../../Structures/Schemas/PremiumGuild")
 
 module.exports = {
     name: "interactionCreate",
@@ -49,10 +51,35 @@ module.exports = {
             ephemeral: true
         })
 
-        if (command.UserPerms && command.UserPerms.length !== 0) if (!member.permissions.has(command.UserPerms)) return Reply(interaction, "❌", `You need \`${command.UserPerms.join(", ")}\` permission(s) to execute this command!`, true)
-        if (command.BotPerms && command.BotPerms.length !== 0) if (!member.permissions.has(command.BotPerms)) return Reply(interaction, "❌", `I need \`${command.BotPerms.join(", ")}\` permission(s) to execute this command!`, true)
+        const PremiumGuildData = await DBG.findOne({ Guild: guild.id }).catch(err => { })
+        const PremiumUserData = await DBU.findOne({ User: user.id }).catch(err => { })
 
-        command.execute(interaction, client)
+        if (command.premium) {
+
+            if (PremiumUserData) {
+
+                if (command.UserPerms && command.UserPerms.length !== 0) if (!member.permissions.has(command.UserPerms)) return Reply(interaction, "❌", `You need \`${command.UserPerms.join(", ")}\` permission(s) to execute this command!`, true)
+                if (command.BotPerms && command.BotPerms.length !== 0) if (!member.permissions.has(command.BotPerms)) return Reply(interaction, "❌", `I need \`${command.BotPerms.join(", ")}\` permission(s) to execute this command!`, true)
+
+                return command.execute(interaction, client)
+
+            } else if (PremiumGuildData) {
+
+                if (command.UserPerms && command.UserPerms.length !== 0) if (!member.permissions.has(command.UserPerms)) return Reply(interaction, "❌", `You need \`${command.UserPerms.join(", ")}\` permission(s) to execute this command!`, true)
+                if (command.BotPerms && command.BotPerms.length !== 0) if (!member.permissions.has(command.BotPerms)) return Reply(interaction, "❌", `I need \`${command.BotPerms.join(", ")}\` permission(s) to execute this command!`, true)
+
+                return command.execute(interaction, client)
+
+            } else Reply(interaction, "❌", `This is a premium command`)
+
+        } else {
+
+            if (command.UserPerms && command.UserPerms.length !== 0) if (!member.permissions.has(command.UserPerms)) return Reply(interaction, "❌", `You need \`${command.UserPerms.join(", ")}\` permission(s) to execute this command!`, true)
+            if (command.BotPerms && command.BotPerms.length !== 0) if (!member.permissions.has(command.BotPerms)) return Reply(interaction, "❌", `I need \`${command.BotPerms.join(", ")}\` permission(s) to execute this command!`, true)
+
+            command.execute(interaction, client)
+
+        }
 
     }
 }

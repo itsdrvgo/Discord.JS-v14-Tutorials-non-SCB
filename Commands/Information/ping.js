@@ -5,6 +5,7 @@ module.exports = {
     name: "ping",
     description: "Displays the ping",
     category: "Information",
+    premium: true,
 
     /**
      * @param {Client} client
