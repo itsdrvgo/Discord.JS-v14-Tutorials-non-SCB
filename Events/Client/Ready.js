@@ -13,7 +13,7 @@ module.exports = {
 
         const { user, ws } = client
 
-        client.player.init(user.id)
+        // client.player.init(user.id)
 
         console.log(`${user.tag} is now online!`)
 

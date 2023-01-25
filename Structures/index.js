@@ -7,7 +7,7 @@ const Ascii = require("ascii-table")
 require("dotenv").config()
 const { Channel, GuildMember, Message, Reaction, ThreadMember, User, GuildScheduledEvent } = Partials
 const nodes = require("../Systems/Nodes")
-const { Manager } = require("erela.js")
+// const { Manager } = require("erela.js")
 
 const client = new Client({
     intents: 131071,
@@ -19,22 +19,22 @@ const client = new Client({
 client.color = "Blue"
 client.commands = new Collection()
 
-const { DiscordTogether } = require("discord-together")
-client.discordTogether = new DiscordTogether(client)
+// const { DiscordTogether } = require("discord-together")
+// client.discordTogether = new DiscordTogether(client)
 
-client.player = new Manager({
-    nodes,
-    send: (id, payload) => {
+// client.player = new Manager({
+//     nodes,
+//     send: (id, payload) => {
 
-        let guild = client.guilds.cache.get(id)
-        if (guild) guild.shard.send(payload)
+//         let guild = client.guilds.cache.get(id)
+//         if (guild) guild.shard.send(payload)
 
-    }
-})
+//     }
+// })
 
-client.on("raw", (d) => client.player.updateVoiceState(d))
+// client.on("raw", (d) => client.player.updateVoiceState(d))
 
-const Handlers = ["Events", "Commands", "EventStack", "Errors", "Player"]
+const Handlers = ["Events", "Commands", "Errors"]
 
 Handlers.forEach(handler => {
 
